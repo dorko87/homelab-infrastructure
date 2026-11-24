@@ -25,7 +25,12 @@ The numbers above describe the repository snapshot documented in November 2026, 
 
 ## The service ecosystem
 
-![Selected service ecosystem](assets/service-ecosystem.svg)
+<picture>
+  <source media="(max-width: 600px)" srcset="assets/service-ecosystem-mobile.svg">
+  <img src="assets/service-ecosystem.svg" alt="Selected services grouped by delivery, observability, networking, media, security and recovery, and AI-assisted operations." width="100%">
+</picture>
+
+[Compact mobile layout](assets/service-ecosystem-mobile.svg) · [Full-size ecosystem](assets/service-ecosystem.svg)
 
 A selected view of the tools and applications I use, grouped by responsibility rather than physical location. I also explore AI-assisted operational workflows as independent experiments. This is not a complete or live service inventory.
 
@@ -44,7 +49,7 @@ A selected view of the tools and applications I use, grouped by responsibility r
 
 ## 01 · How everything fits together
 
-![Platform layers](assets/platform-layers.svg)
+[![Platform layers](assets/platform-layers.svg)](assets/platform-layers.svg)
 
 [Detailed architecture and host roles](architecture/overview.md)
 
@@ -52,7 +57,7 @@ A selected view of the tools and applications I use, grouped by responsibility r
 
 ## 02 · How a change reaches the hosts
 
-![Illustrative animated deployment flow](assets/deployment-flow.svg)
+[![Illustrative animated deployment flow](assets/deployment-flow.svg)](assets/deployment-flow.svg)
 
 *Conceptual animation, not live status. The detailed decision flow is in the deployment documentation.*
 
@@ -62,7 +67,7 @@ The manifest determines which changed stacks are eligible for deployment. Depend
 
 ## 03 · Designing for recovery
 
-![Recovery model](assets/recovery-map.svg)
+[![Recovery model](assets/recovery-map.svg)](assets/recovery-map.svg)
 
 *Restore verification is a separate activity, not a claim that every restore has been tested.*
 
