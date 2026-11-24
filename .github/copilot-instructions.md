@@ -1,0 +1,1 @@
+Read and follow the repository-wide working agreement in [AGENTS.md](../AGENTS.md) before proposing changes. Preserve its privacy, accuracy, editorial and validation requirements. If the file cannot be read, request it before proceeding.
