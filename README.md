@@ -6,7 +6,7 @@
 
 <p align="center">
   <img alt="Defined hosts: 5" src="https://img.shields.io/badge/Defined%20hosts-5-2563EB?style=for-the-badge">
-  <img alt="Defined stacks: 39" src="https://img.shields.io/badge/Defined%20stacks-39-0D9488?style=for-the-badge">
+  <img alt="Defined stacks: 40" src="https://img.shields.io/badge/Defined%20stacks-40-0D9488?style=for-the-badge">
   <img alt="CI validation jobs: 11" src="https://img.shields.io/badge/CI%20jobs-11-7C3AED?style=for-the-badge">
 </p>
 
@@ -21,7 +21,9 @@ I started building this environment to run my own services. Over time, the inter
 
 My professional background is in Tier 3 support and production troubleshooting. This homelab is where I independently explore infrastructure engineering, DevOps practices and automation.
 
-The numbers above describe the repository snapshot documented in November 2026, not a live inventory of running services.
+The numbers above describe the private configuration snapshot dated November 24, 2026, not a live inventory of running services. The public portfolio has its own independent validation workflow.
+
+[![Portfolio validation](https://github.com/dorko87/homelab-infrastructure/actions/workflows/portfolio-validation.yml/badge.svg?branch=main)](https://github.com/dorko87/homelab-infrastructure/actions/workflows/portfolio-validation.yml)
 
 ## The service ecosystem
 
@@ -59,9 +61,9 @@ A selected view of the tools and applications I use, grouped by responsibility r
 
 [![Illustrative animated deployment flow](assets/deployment-flow.svg)](assets/deployment-flow.svg)
 
-*Conceptual animation, not live status. The detailed decision flow is in the deployment documentation.*
+*Conceptual animation, not live status. One 4.8-second cycle; reduced-motion preferences disable the animation. The detailed decision flow is in the deployment documentation.*
 
-The manifest determines which changed stacks are eligible for deployment. Dependencies define ordering, not application health. A deployed revision confirms the configuration version, not the health of every service.
+The manifest determines which changed stacks are eligible for deployment. Documentation-only changes and excluded stacks do not deploy. Independent stack failures are reported without treating revision verification as an application health check. Dependencies define ordering, not application health. A deployed revision confirms the configuration version, not the health of every service.
 
 [Explore the deployment workflow →](ci-cd/deployment-workflow.md) · [See the 11 quality gates →](ci-cd/quality-gates.md)
 
