@@ -1,0 +1,10 @@
+# Synthetic example; not a live homelab stack.
+services:
+  demo-web:
+    image: nginx:1.28-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
