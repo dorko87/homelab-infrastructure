@@ -1,51 +1,129 @@
-# My homelab infrastructure
+<h1 align="center">My Homelab Infrastructure</h1>
 
-**Self-hosting, infrastructure automation and reliability**
+<p align="center"><strong>From a Git commit to a running service — and everything in between.</strong></p>
+
+<p align="center">
+  <img alt="Defined hosts: 5" src="https://img.shields.io/badge/Defined%20hosts-5-2563EB?style=for-the-badge">
+  <img alt="Defined stacks: 39" src="https://img.shields.io/badge/Defined%20stacks-39-0D9488?style=for-the-badge">
+  <img alt="CI validation jobs: 11" src="https://img.shields.io/badge/CI%20jobs-11-7C3AED?style=for-the-badge">
+</p>
+
+<p align="center">
+  <a href="architecture/overview.md">Architecture</a> ·
+  <a href="ci-cd/deployment-workflow.md">Deployments</a> ·
+  <a href="reliability/disaster-recovery.md">Recovery</a> ·
+  <a href="case-studies/deployment-migration.md">Case study</a>
+</p>
 
 I started building this environment to run my own services. Over time, the interesting part became managing changes across multiple machines without turning every upgrade into a manual maintenance task.
 
-This repository is a public engineering portfolio based on my private homelab. It documents the architecture, decisions and operational practices rather than mirroring my live configuration. My professional background is in Tier 3 support and production troubleshooting; the infrastructure work described here is independent, hands-on experience.
+My professional background is in Tier 3 support and production troubleshooting. This homelab is where I independently explore infrastructure engineering, DevOps practices and automation.
 
-| Scope | Repository snapshot |
-| --- | --- |
-| Infrastructure | 5 defined hosts, including an offsite role |
-| Container workloads | 39 defined stacks (not necessarily all running) |
-| Continuous integration | 11 validation jobs |
-| Deployment | Git-managed configuration, Dockhand orchestration |
+The numbers above describe the documented repository snapshot, not a live inventory of running services.
 
-## How it fits together
+## 01 · How everything fits together
 
 ```mermaid
 flowchart TD
-    G[Forgejo repository] --> P[Pull request and CI checks]
-    P --> M[Merge to main]
-    M --> D[Deployment planner and policy]
-    D --> V[Compose validation and preflight]
-    V --> E[Dockhand]
-    S[Infisical] --> E
-    E --> H[Multi-host Docker environment]
-    H --> O[Monitoring and alerting]
-    H --> B[Backup and recovery]
-    B --> F[Offsite backup tier]
+    G["Forgejo · Git"] --> Q["Pull request · CI checks"]
+    Q --> P["Merge · deployment planner"]
+    P --> V["Compose validation · preflight"]
+    V --> D["Dockhand · deployment"]
+    S["Infisical · secrets"] --> D
+    D --> H["Multi-host Docker environment"]
+    H --> O["Prometheus · Grafana · Checkmk"]
+    H --> B["Backup · recovery"]
+    B --> F["Selective offsite copies"]
+    class G,Q source;
+    class P,V,D,S control;
+    class H,O runtime;
+    class B,F recovery;
+    classDef source fill:#DBEAFE,stroke:#2563EB,color:#172554,stroke-width:1.5px;
+    classDef control fill:#EDE9FE,stroke:#7C3AED,color:#2E1065,stroke-width:1.5px;
+    classDef runtime fill:#CCFBF1,stroke:#0D9488,color:#134E4A,stroke-width:1.5px;
+    classDef recovery fill:#FEF3C7,stroke:#D97706,color:#78350F,stroke-width:1.5px;
+    classDef caution fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D,stroke-width:1.5px;
 ```
 
-## Engineering notes
+*Logical architecture, not a physical network map.*
 
-| Area | What I document |
+| Area | Tools and responsibilities |
 | --- | --- |
-| [Architecture](architecture/overview.md) | How the components fit together |
-| [Deployment workflow](ci-cd/deployment-workflow.md) | Change detection, policy, validation and revision checks |
-| [Quality gates](ci-cd/quality-gates.md) | What gets checked before changes are merged |
-| [Deployment migration](case-studies/deployment-migration.md) | Moving from Komodo to Dockhand and the remaining fallback gap |
-| [Observability](reliability/observability.md) | Monitoring and detecting silent failures |
-| [Disaster recovery](reliability/disaster-recovery.md) | Backup priorities and restore confidence |
-| [Secrets management](security/secrets-management.md) | Separating credentials from configuration |
-| [Examples](examples/README.md) | Small, synthetic configuration examples |
+| Version control | Forgejo, Git, pull requests |
+| Deployment | CI/CD, central policy, Docker Compose, Dockhand |
+| Secrets | Infisical, separation of configuration and credentials |
+| Observability | Prometheus, Grafana, Checkmk |
+| Recovery | Restic, Borg, selective offsite backups |
 
-## What I am still working on
+## 02 · How a change reaches the hosts
 
-I want to keep improving recovery confidence and make operational changes easier to understand and verify. One specific gap is the untested recovery path from Dockhand to the former deployment engine. Retaining the former tool is not the same thing as a demonstrated recovery path.
+```mermaid
+flowchart TD
+    A["Merge to main"] --> B["Identify changed stacks"]
+    B --> C{"Eligible runtime change?"}
+    C -->|No| N["No runtime deployment"]
+    C -->|Yes| V["Validate Compose"]
+    V --> P["Dockhand preflight"]
+    P --> D["Deploy selected stacks"]
+    D --> R["Verify deployed revision"]
+    R --> E["Report outcome"]
+    class A,B source;
+    class C,V,P control;
+    class D,R,E runtime;
+    class N recovery;
+    classDef source fill:#DBEAFE,stroke:#2563EB,color:#172554,stroke-width:1.5px;
+    classDef control fill:#EDE9FE,stroke:#7C3AED,color:#2E1065,stroke-width:1.5px;
+    classDef runtime fill:#CCFBF1,stroke:#0D9488,color:#134E4A,stroke-width:1.5px;
+    classDef recovery fill:#FEF3C7,stroke:#D97706,color:#78350F,stroke-width:1.5px;
+    classDef caution fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D,stroke-width:1.5px;
+```
 
-The diagrams are logical views. Real network details, credentials, service inventories, private paths and operational identifiers are deliberately omitted. Examples are illustrative and are not the live configuration.
+The manifest determines which changed stacks are eligible for deployment. Dependencies define ordering, not application health. A deployed revision confirms the configuration version, not the health of every service.
 
-[GitHub profile](https://github.com/dorko87)
+[Explore the deployment workflow →](ci-cd/deployment-workflow.md) · [See the 11 quality gates →](ci-cd/quality-gates.md)
+
+## 03 · Designing for recovery
+
+```mermaid
+flowchart LR
+    A["Workload data"] --> B["Backup preparation"]
+    C["Database-native dumps"] --> B
+    B --> D["Local backup tier"]
+    D --> E["Selective offsite tier"]
+    D -.-> F["Restore verification"]
+    E -.-> F
+    F --> G["Recovery confidence"]
+    class A,C source;
+    class B control;
+    class D,E recovery;
+    class F,G runtime;
+    classDef source fill:#DBEAFE,stroke:#2563EB,color:#172554,stroke-width:1.5px;
+    classDef control fill:#EDE9FE,stroke:#7C3AED,color:#2E1065,stroke-width:1.5px;
+    classDef runtime fill:#CCFBF1,stroke:#0D9488,color:#134E4A,stroke-width:1.5px;
+    classDef recovery fill:#FEF3C7,stroke:#D97706,color:#78350F,stroke-width:1.5px;
+    classDef caution fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D,stroke-width:1.5px;
+```
+
+*The dashed paths represent verification activities, not a claim that every restore has been tested.*
+
+I treat a successful backup and a proven restore as different things. Offsite coverage is selective, and recovery confidence depends on verification.
+
+[Read about disaster recovery →](reliability/disaster-recovery.md)
+
+## 04 · Engineering decisions worth documenting
+
+| Topic | Why it matters |
+| --- | --- |
+| [Architecture and host roles](architecture/overview.md) | Understanding where responsibilities belong |
+| [Changing the deployment engine](case-studies/deployment-migration.md) | Separating policy from execution and recognizing an untested fallback |
+| [Observability](reliability/observability.md) | Detecting failures, including missing scheduled activity |
+| [Secrets management](security/secrets-management.md) | Keeping credentials out of versioned configuration |
+| [Synthetic examples](examples/README.md) | Exploring Compose and deployment policy without exposing live configuration |
+
+## What's next?
+
+I'm working toward stronger recovery confidence and easier-to-verify infrastructure changes. One known gap is the untested return path to the former deployment engine. Keeping an older tool available is not the same as proving recovery.
+
+> This is a public engineering portfolio, not a mirror of my private homelab. Network details, private identifiers, credentials, live configurations and operational paths are deliberately omitted. Examples are synthetic.
+
+[Back to my GitHub profile](https://github.com/dorko87)
