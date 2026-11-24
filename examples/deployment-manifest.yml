@@ -1,0 +1,9 @@
+# Illustrative policy only; no executor is included.
+# Dependencies represent ordering, not health checks.
+stacks:
+  - name: example/platform
+  - name: example/application
+    after: [example/platform]
+excluded:
+  - name: example/manual-maintenance
+    reason: Requires an explicit operator action.
