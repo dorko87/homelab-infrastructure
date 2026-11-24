@@ -1,0 +1,122 @@
+{
+  "groups": [
+    {
+      "name": "Delivery & automation",
+      "color": "#38bdf8",
+      "purpose": "Version control, deployment and dependency updates",
+      "services": [
+        [
+          "Forgejo",
+          "forgejo.svg"
+        ],
+        [
+          "Docker",
+          "docker.svg"
+        ],
+        [
+          "Dockhand",
+          "dockhand-symbol.svg"
+        ],
+        [
+          "Renovate",
+          "renovate.svg"
+        ]
+      ]
+    },
+    {
+      "name": "Observability",
+      "color": "#2dd4bf",
+      "purpose": "Metrics, dashboards, health and availability",
+      "services": [
+        [
+          "Grafana",
+          "grafana.svg"
+        ],
+        [
+          "Prometheus",
+          "prometheus.svg"
+        ],
+        [
+          "Checkmk",
+          "checkmk.svg"
+        ],
+        [
+          "Uptime Kuma",
+          "uptime-kuma.svg"
+        ]
+      ]
+    },
+    {
+      "name": "Networking & DNS",
+      "color": "#a78bfa",
+      "purpose": "Connectivity and name resolution",
+      "services": [
+        [
+          "Tailscale",
+          "tailscale.svg"
+        ],
+        [
+          "AdGuard Home",
+          "adguard-home.svg"
+        ],
+        [
+          "Unbound",
+          "unbound.svg"
+        ]
+      ]
+    },
+    {
+      "name": "Media & GPU",
+      "color": "#f472b6",
+      "purpose": "Independent self-hosted applications",
+      "services": [
+        [
+          "Frigate",
+          "frigate.svg"
+        ],
+        [
+          "Immich",
+          "immich.svg"
+        ],
+        [
+          "Plex",
+          "plex.svg"
+        ]
+      ]
+    },
+    {
+      "name": "Security & recovery",
+      "color": "#fbbf24",
+      "purpose": "Secrets, scanning and backup tooling",
+      "services": [
+        [
+          "Infisical",
+          "infisical.svg"
+        ],
+        [
+          "Trivy",
+          "trivy.svg"
+        ],
+        [
+          "Borg",
+          "borg.svg"
+        ],
+        [
+          "Restic",
+          null
+        ]
+      ]
+    },
+    {
+      "name": "AI-assisted operations",
+      "color": "#c4b5fd",
+      "purpose": "Independent experiments with bounded operational workflows",
+      "services": [
+        [
+          "AI agents",
+          null
+        ]
+      ]
+    }
+  ]
+}
