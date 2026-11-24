@@ -82,7 +82,11 @@ const assets = """ + payload + """;
     await loaded;
     const win = frame.contentWindow, doc = frame.contentDocument, image = doc.querySelector('img');
     // Layout and picture selection may settle after the iframe's load event.
-    await new Promise(resolve => win.requestAnimationFrame(() => win.requestAnimationFrame(resolve)));
+    const expectedUri = assets[width <= 600 ? 1 : 0].uri;
+    // Hidden frames can suspend animation frames; poll from the parent instead.
+    for (let attempt=0; attempt<20 && image.currentSrc!==expectedUri; attempt++) {
+      await new Promise(resolve => setTimeout(resolve,50));
+    }
     await image.decode();
     const mediaMatches = win.matchMedia('(max-width: 600px)').matches;
     const selected = image.currentSrc === assets[1].uri ? 'mobile' :
