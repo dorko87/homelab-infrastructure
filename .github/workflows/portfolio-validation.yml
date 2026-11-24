@@ -9,19 +9,57 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: portfolio-validation-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate-assets:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Check generated ecosystem is current
+        run: node scripts/generate_assets.mjs --check
       - name: Validate SVG assets and local links
         run: python3 scripts/validate_assets.py
-      - name: Check Chromium rendering at desktop and mobile widths
+      - name: Test validator against deliberate defects
+        run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
+      - name: Validate synthetic Compose and manifest
+        run: |
+          docker compose -f examples/docker-compose.yml config --quiet
+          ruby -ryaml -e 'data = YAML.safe_load_file("examples/deployment-manifest.yml"); abort "invalid manifest" unless data["stacks"].is_a?(Array) && data["excluded"].is_a?(Array)'
+      - name: Check Chromium rendering, responsive widths and motion
         run: python3 scripts/check_rendering.py
       - name: Upload visual review screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: portfolio-visual-review
           path: qa-renders/*.png
           retention-days: 14
+
+  validate-mermaid:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Extract and render Mermaid diagrams
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+        run: |
+          python3 scripts/check_mermaid.py
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Scan public Git history
+        run: docker run --rm -v "$PWD:/repo:ro" ghcr.io/gitleaks/gitleaks:v8.24.3 git /repo --redact=100 --no-banner --log-opts=--all
