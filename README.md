@@ -1,4 +1,6 @@
-<h1 align="center">My Homelab Infrastructure</h1>
+<p align="center"><img src="assets/hero.svg" alt="Homelab infrastructure — Build, Deploy, Observe, Recover" width="100%"></p>
+
+# My Homelab Infrastructure
 
 <p align="center"><strong>From a Git commit to a running service — and everything in between.</strong></p>
 
@@ -20,6 +22,15 @@ I started building this environment to run my own services. Over time, the inter
 My professional background is in Tier 3 support and production troubleshooting. This homelab is where I independently explore infrastructure engineering, DevOps practices and automation.
 
 The numbers above describe the documented repository snapshot, not a live inventory of running services.
+
+## The tools behind the lab
+
+| Source & deployment | Monitoring | Security & recovery |
+| --- | --- | --- |
+| ![Forgejo](https://img.shields.io/badge/Forgejo-FB923C?style=for-the-badge&logo=forgejo&logoColor=white) | ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white) | ![Infisical](https://img.shields.io/badge/Infisical-475569?style=for-the-badge) |
+| ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white) | ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white) | ![Trivy](https://img.shields.io/badge/Trivy-1904DA?style=for-the-badge) |
+| ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white) | ![Checkmk](https://img.shields.io/badge/Checkmk-087F65?style=for-the-badge) | ![Restic](https://img.shields.io/badge/Restic-475569?style=for-the-badge) |
+| ![Dockhand](https://img.shields.io/badge/Dockhand-2563EB?style=for-the-badge) | ![Renovate](https://img.shields.io/badge/Renovate-1A1F6C?style=for-the-badge&logo=renovate&logoColor=white) | ![Borg](https://img.shields.io/badge/Borg-475569?style=for-the-badge) |
 
 ## 01 · How everything fits together
 
@@ -56,6 +67,9 @@ flowchart TD
 | Recovery | Restic, Borg, selective offsite backups |
 
 ## 02 · How a change reaches the hosts
+
+![Illustrative animated deployment flow](assets/deployment-flow.svg)
+
 
 ```mermaid
 flowchart TD
