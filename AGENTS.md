@@ -32,3 +32,10 @@ This repository is a public engineering portfolio based on an independent homela
 - Review the diff, check relative links, Markdown and Mermaid syntax, parse YAML examples, and scan the proposed publication for sensitive information before committing. Report checks actually performed and any limitations.
 - Do not treat a request to edit as authorization to publish unrelated changes. Obtain explicit approval before exposing new categories of private-derived information.
 - Never deploy to the private homelab from this repository.
+
+## Visual design
+- Maintain one visual per concept on the landing page; detailed decision flows belong in topic-specific documentation.
+- Use local SVG assets, consistent colors and readable labels. Include text alternatives for complex graphics.
+- Use authentic service artwork with recorded sources and applicable license notices; do not imply endorsement. Use a generic symbol when a logo cannot be verified.
+- Keep animation illustrative, finite and compatible with reduced-motion preferences. Never imply live telemetry.
+- Check SVG XML, embedded assets, links, contrast and desktop/mobile rendering before claiming visual QA is complete.
