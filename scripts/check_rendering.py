@@ -38,8 +38,8 @@ page = """<!doctype html><html><head><meta charset="utf-8">
 <style>body{margin:12px;background:#0b1526;color:white}
 main{max-width:1000px;margin:auto}img{max-width:100%;height:auto;display:block}
 pre{white-space:pre-wrap;font-size:12px}</style></head><body><main>
-<picture><source media="(max-width: 600px)" srcset="""" + mobile["uri"] + """">
-<img id="map" alt="Service ecosystem" src="""" + desktop["uri"] + """"></picture>
+<picture><source media="(max-width: 600px)" srcset="__MOBILE__">
+<img id="map" alt="Service ecosystem" src="__DESKTOP__"></picture>
 <pre id="qa">PENDING</pre></main><script>
 const assets = """ + payload + """;
 (async () => {
@@ -73,6 +73,7 @@ const assets = """ + payload + """;
   document.getElementById('qa').textContent = 'PASS | viewport ' + innerWidth + ' | ' + reports.join(' | ');
 })().catch(e => {document.getElementById('qa').textContent = 'FAIL | '+e.message;});
 </script></body></html>"""
+page = page.replace("__MOBILE__", mobile["uri"]).replace("__DESKTOP__", desktop["uri"])
 
 def run(args, profile, url):
     command = [BROWSER, "--headless", "--no-sandbox", "--disable-dev-shm-usage",
