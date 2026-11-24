@@ -39,3 +39,9 @@ This repository is a public engineering portfolio based on an independent homela
 - Use authentic service artwork with recorded sources and applicable license notices; do not imply endorsement. Use a generic symbol when a logo cannot be verified.
 - Keep animation illustrative, finite and compatible with reduced-motion preferences. Never imply live telemetry.
 - Check SVG XML, embedded assets, links, contrast and desktop/mobile rendering before claiming visual QA is complete.
+
+## Portfolio quality workflow
+- Use a focused branch and pull request for changes to public portfolio content. Verify the pull-request checks and review the diff before merging; do not assume branch protection is enabled.
+- Edit `assets/services.json` and local icon files rather than hand-editing the generated ecosystem SVGs. Run `node scripts/generate_assets.mjs` and verify the generated output with `--check`.
+- Keep the illustrative animation under five seconds, retain a static readable fallback, and test reduced-motion behavior.
+- Distinguish actual validation results from manual review and from outstanding checks. Never expose private inventory to regenerate public graphics.

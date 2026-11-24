@@ -1,5 +1,7 @@
 """Validate public portfolio assets and relative links; no third-party dependencies."""
 import base64
+import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -33,7 +35,7 @@ def validate_svg(raw, label, depth=0):
         fail(label, "root is not SVG")
     try:
         box = [float(v) for v in root.attrib["viewBox"].replace(",", " ").split()]
-        if len(box) != 4 or box[2] <= 0 or box[3] <= 0:
+        if len(box) != 4 or not all(math.isfinite(v) for v in box) or box[2] <= 0 or box[3] <= 0:
             raise ValueError
     except (KeyError, ValueError):
         fail(label, "missing or invalid viewBox")
@@ -63,6 +65,8 @@ def validate_svg(raw, label, depth=0):
                         fail(label, f"invalid base64: {exc}")
                 else:
                     fail(label, f"unexpected external reference: {value[:100]}")
+            if re.search(r"url\(\s*['\"]?(?:https?:|//|javascript:|file:)", value, re.I):
+                fail(label, "external SVG resource")
             for ref in re.findall(r"url\(\s*['\"]?#([^)'\"]+)['\"]?\s*\)", value):
                 refs.append(ref)
         if tag == "style" and el.text:
@@ -84,28 +88,67 @@ def validate_link(file, target):
     if not path.is_relative_to(ROOT) or not path.exists():
         fail(file.relative_to(ROOT), f"broken local link: {target}")
 
-for file in sorted((ROOT / "assets").rglob("*.svg")):
-    validate_svg(file.read_bytes(), str(file.relative_to(ROOT)))
-
-for file in sorted(ROOT.rglob("*.md")):
-    if ".git" in file.parts:
-        continue
-    text = file.read_text(encoding="utf-8")
-    text = re.sub(r"```[\s\S]*?```", "", text)
-    for target in re.findall(r"\]\(([^)\s]+)\)", text):
-        validate_link(file, target)
-    for target in re.findall(r'(?:src|srcset|href)="([^"]+)"', text):
-        validate_link(file, target)
-
-for name in ("service-ecosystem.svg", "service-ecosystem-mobile.svg"):
-    file = ROOT / "assets" / name
-    if file.exists():
-        root = ET.fromstring(file.read_bytes())
+def validate_catalog():
+    catalog = json.loads((ROOT / "assets/services.json").read_text(encoding="utf-8"))
+    expected = {}
+    names = set()
+    for group in catalog["groups"]:
+        for label, icon in group["services"]:
+            if label in names:
+                fail("service catalog", f"duplicate label {label}")
+            names.add(label)
+            if icon is not None:
+                path = ROOT / "assets/icons" / icon
+                if not re.fullmatch(r"[a-z0-9-]+\.svg", icon) or not path.is_file():
+                    fail("service catalog", f"invalid local icon {icon}")
+                    continue
+                expected[label] = path.read_bytes()
+    for name in ("service-ecosystem.svg", "service-ecosystem-mobile.svg"):
+        file = ROOT / "assets" / name
+        if not file.is_file():
+            fail(name, "missing generated map")
+            continue
+        try:
+            root = ET.fromstring(file.read_bytes())
+        except ET.ParseError:
+            continue
         images = root.findall(f".//{{{SVG}}}image")
-        if len(images) != 17:
-            fail(name, f"expected 17 embedded service logos, got {len(images)}")
+        actual = {}
+        for img in images:
+            label = img.get("data-service")
+            if label in actual:
+                fail(name, f"duplicate embedded service {label}")
+            try:
+                href = img.get("href", "")
+                if not href.startswith(DATA):
+                    raise ValueError("not a local embedded SVG")
+                actual[label] = base64.b64decode(href[len(DATA):], validate=True)
+            except (ValueError, TypeError):
+                fail(name, f"invalid embedded service {label}")
+        if actual != expected:
+            fail(name, "embedded artwork does not match the service catalog")
 
-if errors:
-    print("\n".join(errors), file=sys.stderr)
-    sys.exit(1)
-print(f"OK: {count} SVG documents (including embedded logos) and local Markdown links.")
+def main():
+    global count
+    errors.clear()
+    count = 0
+    for file in sorted((ROOT / "assets").rglob("*.svg")):
+        validate_svg(file.read_bytes(), str(file.relative_to(ROOT)))
+    for file in sorted(ROOT.rglob("*.md")):
+        if ".git" in file.parts or "node_modules" in file.parts:
+            continue
+        text = file.read_text(encoding="utf-8")
+        text = re.sub(r"```[\s\S]*?```", "", text)
+        for target in re.findall(r"\]\(([^)\s]+)\)", text):
+            validate_link(file, target)
+        for target in re.findall(r'(?:src|srcset|href)="([^"]+)"', text):
+            validate_link(file, target)
+    validate_catalog()
+    if errors:
+        print("\n".join(errors), file=sys.stderr)
+        return 1
+    print(f"OK: {count} SVG documents (including embedded logos), catalog and local Markdown links.")
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
