@@ -25,6 +25,8 @@ The numbers above describe the documented repository snapshot, not a live invent
 
 ## The service ecosystem
 
+![Selected service ecosystem](assets/service-ecosystem.svg)
+
 A selected view of the tools and applications I use, grouped by responsibility rather than physical location. This is not a complete or live service inventory.
 
 ### Platform & delivery
@@ -51,27 +53,9 @@ A selected view of the tools and applications I use, grouped by responsibility r
 
 ## 01 · How everything fits together
 
-```mermaid
-flowchart TD
-    G["Forgejo · Git"] --> Q["Pull request · CI checks"]
-    Q --> P["Merge · deployment planner"]
-    P --> V["Compose validation · preflight"]
-    V --> D["Dockhand · deployment"]
-    S["Infisical · secrets"] --> D
-    D --> H["Multi-host Docker environment"]
-    H --> O["Prometheus · Grafana · Checkmk"]
-    H --> B["Backup · recovery"]
-    B --> F["Selective offsite copies"]
-    class G,Q source;
-    class P,V,D,S control;
-    class H,O runtime;
-    class B,F recovery;
-    classDef source fill:#DBEAFE,stroke:#2563EB,color:#172554,stroke-width:1.5px;
-    classDef control fill:#EDE9FE,stroke:#7C3AED,color:#2E1065,stroke-width:1.5px;
-    classDef runtime fill:#CCFBF1,stroke:#0D9488,color:#134E4A,stroke-width:1.5px;
-    classDef recovery fill:#FEF3C7,stroke:#D97706,color:#78350F,stroke-width:1.5px;
-    classDef caution fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D,stroke-width:1.5px;
-```
+![Platform layers](assets/platform-layers.svg)
+
+[Detailed architecture and host roles](architecture/overview.md)
 
 *Logical architecture, not a physical network map.*
 
