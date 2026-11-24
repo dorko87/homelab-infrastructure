@@ -81,9 +81,18 @@ const assets = """ + payload + """;
     document.body.append(frame);
     await loaded;
     const win = frame.contentWindow, doc = frame.contentDocument, image = doc.querySelector('img');
+    // Layout and picture selection may settle after the iframe's load event.
+    await new Promise(resolve => win.requestAnimationFrame(() => win.requestAnimationFrame(resolve)));
     await image.decode();
+    const mediaMatches = win.matchMedia('(max-width: 600px)').matches;
+    const selected = image.currentSrc === assets[1].uri ? 'mobile' :
+                     image.currentSrc === assets[0].uri ? 'desktop' : 'unknown';
+    const expected = width <= 600 ? 'mobile' : 'desktop';
     if (win.innerWidth !== width || doc.documentElement.scrollWidth > width ||
-        image.currentSrc !== assets[width <= 600 ? 1 : 0].uri) throw Error('responsive iframe '+width);
+        mediaMatches !== (width <= 600) || selected !== expected) {
+      throw Error('responsive iframe '+width+' inner='+win.innerWidth+' scroll='+doc.documentElement.scrollWidth+
+                  ' media='+mediaMatches+' selected='+selected+' expected='+expected);
+    }
     frame.remove();
     reports.push('viewport '+width+' passed');
   }
