@@ -75,11 +75,11 @@ const assets = """ + payload + """;
   // Real iframe viewports avoid Chromium's minimum desktop window size.
   for (const width of [320,375,768]) {
     const frame = document.createElement('iframe');
-    frame.style.cssText = 'position:absolute;left:-10000px;top:0;border:0;width:'+width+'px;height:2000px';
+    frame.style.cssText = 'position:absolute;left:0;top:0;z-index:-1;border:0;width:'+width+'px;height:2000px';
     const loaded = new Promise(resolve => frame.onload = resolve);
     frame.srcdoc = '<!doctype html><meta name="viewport" content="width=device-width, initial-scale=1"><style>body{margin:0}img{display:block;width:100%;height:auto}</style><picture><source media="(max-width: 600px)" srcset="'+assets[1].uri+'"><img src="'+assets[0].uri+'"></picture>';
     document.body.append(frame);
-    await loaded;
+    await Promise.race([loaded, new Promise((_,reject)=>setTimeout(()=>reject(Error('iframe load timeout '+width)),3000))]);
     const win = frame.contentWindow, doc = frame.contentDocument, image = doc.querySelector('img');
     // Layout and picture selection may settle after the iframe's load event.
     const expectedUri = assets[width <= 600 ? 1 : 0].uri;
@@ -118,7 +118,7 @@ const assets = """ + payload + """;
   } else {
     for (let i=0;i<6;i++) {
       svg.setCurrentTime(i*.8+.4);
-      await new Promise(requestAnimationFrame);
+      svg.getBoundingClientRect();
       const opacity = Number(getComputedStyle(stages[i]).opacity);
       const active = stages.filter(r=>Number(getComputedStyle(r).opacity)>.5).length;
       if (opacity < .9 || active !== 1) throw Error('animation stage '+(i+1)+' opacity='+opacity+' active='+active);
@@ -126,7 +126,7 @@ const assets = """ + payload + """;
       if (Math.abs(progress.width.animVal.value-expected)>3) throw Error('progress timing mismatch at stage '+(i+1));
     }
     svg.setCurrentTime(5);
-    await new Promise(requestAnimationFrame);
+    svg.getBoundingClientRect();
     if (stages.some(r=>Number(getComputedStyle(r).opacity)>.01) || Math.abs(progress.width.animVal.value-740)>3) throw Error('animation did not finish');
     reports.push('six animation stages and 4.8s completion passed');
   }
