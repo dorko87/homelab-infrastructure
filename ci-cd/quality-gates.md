@@ -17,3 +17,27 @@ The source snapshot defines eleven CI jobs covering these checks:
 | Ticket reference | Support change traceability |
 
 Branch protection and pull-request checks are documented in the private repository. Image updates are managed through Renovate, with review rules and exclusions. These are preventive controls, not a guarantee that every change is safe. Runtime checks and recovery planning remain necessary.
+
+## Visual overview
+
+```mermaid
+flowchart TD
+    A["Pull request"] --> B["11 validation jobs"]
+    B --> C["Configuration and workflow checks"]
+    B --> D["Security and secret hygiene"]
+    B --> E["Backup and deployment policy"]
+    B --> F["Documentation and traceability"]
+    C --> G["Review evidence"]
+    D --> G
+    E --> G
+    F --> G
+    class A source;
+    class B control;
+    class C,D,E,F runtime;
+    class G recovery;
+    classDef source fill:#DBEAFE,stroke:#2563EB,color:#172554,stroke-width:1.5px;
+    classDef control fill:#EDE9FE,stroke:#7C3AED,color:#2E1065,stroke-width:1.5px;
+    classDef runtime fill:#CCFBF1,stroke:#0D9488,color:#134E4A,stroke-width:1.5px;
+    classDef recovery fill:#FEF3C7,stroke:#D97706,color:#78350F,stroke-width:1.5px;
+    classDef caution fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D,stroke-width:1.5px;
+```
