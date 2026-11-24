@@ -23,14 +23,31 @@ My professional background is in Tier 3 support and production troubleshooting. 
 
 The numbers above describe the documented repository snapshot, not a live inventory of running services.
 
-## The tools behind the lab
+## The service ecosystem
 
-| Source & deployment | Monitoring | Security & recovery |
-| --- | --- | --- |
-| ![Forgejo](https://img.shields.io/badge/Forgejo-FB923C?style=for-the-badge&logo=forgejo&logoColor=white) | ![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white) | ![Infisical](https://img.shields.io/badge/Infisical-475569?style=for-the-badge) |
-| ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white) | ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white) | ![Trivy](https://img.shields.io/badge/Trivy-1904DA?style=for-the-badge) |
-| ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white) | ![Checkmk](https://img.shields.io/badge/Checkmk-087F65?style=for-the-badge) | ![Restic](https://img.shields.io/badge/Restic-475569?style=for-the-badge) |
-| ![Dockhand](https://img.shields.io/badge/Dockhand-2563EB?style=for-the-badge) | ![Renovate](https://img.shields.io/badge/Renovate-1A1F6C?style=for-the-badge&logo=renovate&logoColor=white) | ![Borg](https://img.shields.io/badge/Borg-475569?style=for-the-badge) |
+A selected view of the tools and applications I use, grouped by responsibility rather than physical location. This is not a complete or live service inventory.
+
+### Platform & delivery
+
+<table><tr><td align="center" width="150"><img src="assets/icons/forgejo.svg" width="52" height="52" alt="Forgejo logo"><br><strong>Forgejo</strong></td><td align="center" width="150"><img src="assets/icons/docker.svg" width="52" height="52" alt="Docker logo"><br><strong>Docker</strong></td><td align="center" width="150"><img src="assets/icons/dockhand.svg" width="52" height="52" alt="Dockhand logo"><br><strong>Dockhand</strong></td><td align="center" width="150"><img src="assets/icons/renovate.svg" width="52" height="52" alt="Renovate logo"><br><strong>Renovate</strong></td></tr></table>
+
+### Observability
+
+<table><tr><td align="center" width="150"><img src="assets/icons/grafana.svg" width="52" height="52" alt="Grafana logo"><br><strong>Grafana</strong></td><td align="center" width="150"><img src="assets/icons/prometheus.svg" width="52" height="52" alt="Prometheus logo"><br><strong>Prometheus</strong></td><td align="center" width="150"><img src="assets/icons/checkmk.svg" width="52" height="52" alt="Checkmk logo"><br><strong>Checkmk</strong></td><td align="center" width="150"><img src="assets/icons/uptime-kuma.svg" width="52" height="52" alt="Uptime Kuma logo"><br><strong>Uptime Kuma</strong></td></tr></table>
+
+### Networking & DNS
+
+<table><tr><td align="center" width="150"><img src="assets/icons/tailscale.svg" width="52" height="52" alt="Tailscale logo"><br><strong>Tailscale</strong></td><td align="center" width="150"><img src="assets/icons/adguard-home.svg" width="52" height="52" alt="AdGuard Home logo"><br><strong>AdGuard Home</strong></td><td align="center" width="150"><img src="assets/icons/unbound.svg" width="52" height="52" alt="Unbound logo"><br><strong>Unbound</strong></td></tr></table>
+
+### Media & GPU applications
+
+<table><tr><td align="center" width="150"><img src="assets/icons/frigate.svg" width="52" height="52" alt="Frigate logo"><br><strong>Frigate</strong></td><td align="center" width="150"><img src="assets/icons/immich.svg" width="52" height="52" alt="Immich logo"><br><strong>Immich</strong></td><td align="center" width="150"><img src="assets/icons/plex.svg" width="52" height="52" alt="Plex logo"><br><strong>Plex</strong></td></tr></table>
+
+### Secrets, security & recovery
+
+<table><tr><td align="center" width="150"><img src="assets/icons/infisical.svg" width="52" height="52" alt="Infisical logo"><br><strong>Infisical</strong></td><td align="center" width="150"><img src="assets/icons/trivy.svg" width="52" height="52" alt="Trivy logo"><br><strong>Trivy</strong></td><td align="center" width="150"><img src="assets/icons/borg.svg" width="52" height="52" alt="Borg logo"><br><strong>Borg</strong></td><td align="center" width="150"><strong>Restic</strong></td></tr></table>
+
+[Logo sources and attribution](assets/README.md)
 
 ## 01 · How everything fits together
 
@@ -70,27 +87,10 @@ flowchart TD
 
 ![Illustrative animated deployment flow](assets/deployment-flow.svg)
 
+*Conceptual animation, not live status. The detailed decision flow is in the deployment documentation.*
 
-```mermaid
-flowchart TD
-    A["Merge to main"] --> B["Identify changed stacks"]
-    B --> C{"Eligible runtime change?"}
-    C -->|No| N["No runtime deployment"]
-    C -->|Yes| V["Validate Compose"]
-    V --> P["Dockhand preflight"]
-    P --> D["Deploy selected stacks"]
-    D --> R["Verify deployed revision"]
-    R --> E["Report outcome"]
-    class A,B source;
-    class C,V,P control;
-    class D,R,E runtime;
-    class N recovery;
-    classDef source fill:#DBEAFE,stroke:#2563EB,color:#172554,stroke-width:1.5px;
-    classDef control fill:#EDE9FE,stroke:#7C3AED,color:#2E1065,stroke-width:1.5px;
-    classDef runtime fill:#CCFBF1,stroke:#0D9488,color:#134E4A,stroke-width:1.5px;
-    classDef recovery fill:#FEF3C7,stroke:#D97706,color:#78350F,stroke-width:1.5px;
-    classDef caution fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D,stroke-width:1.5px;
-```
+
+
 
 The manifest determines which changed stacks are eligible for deployment. Dependencies define ordering, not application health. A deployed revision confirms the configuration version, not the health of every service.
 
