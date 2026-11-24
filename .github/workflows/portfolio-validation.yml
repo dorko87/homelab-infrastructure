@@ -17,3 +17,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate SVG assets and local links
         run: python3 scripts/validate_assets.py
+      - name: Check Chromium rendering at desktop and mobile widths
+        run: python3 scripts/check_rendering.py
+      - name: Upload visual review screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-visual-review
+          path: qa-renders/*.png
+          retention-days: 14
