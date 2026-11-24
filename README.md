@@ -21,33 +21,24 @@ I started building this environment to run my own services. Over time, the inter
 
 My professional background is in Tier 3 support and production troubleshooting. This homelab is where I independently explore infrastructure engineering, DevOps practices and automation.
 
-The numbers above describe the documented repository snapshot, not a live inventory of running services.
+The numbers above describe the repository snapshot documented in November 2026, not a live inventory of running services.
 
 ## The service ecosystem
 
 ![Selected service ecosystem](assets/service-ecosystem.svg)
 
-A selected view of the tools and applications I use, grouped by responsibility rather than physical location. This is not a complete or live service inventory.
+A selected view of the tools and applications I use, grouped by responsibility rather than physical location. I also explore AI-assisted operational workflows as independent experiments. This is not a complete or live service inventory.
 
-### Platform & delivery
+<details><summary>Accessible text version of the ecosystem</summary>
 
-<table><tr><td align="center" width="150"><img src="assets/icons/forgejo.svg" width="52" height="52" alt="Forgejo logo"><br><strong>Forgejo</strong></td><td align="center" width="150"><img src="assets/icons/docker.svg" width="52" height="52" alt="Docker logo"><br><strong>Docker</strong></td><td align="center" width="150"><img src="assets/icons/dockhand.svg" width="52" height="52" alt="Dockhand logo"><br><strong>Dockhand</strong></td><td align="center" width="150"><img src="assets/icons/renovate.svg" width="52" height="52" alt="Renovate logo"><br><strong>Renovate</strong></td></tr></table>
+- Delivery: Forgejo, Docker, Dockhand, Renovate
+- Observability: Grafana, Prometheus, Checkmk, Uptime Kuma
+- Networking: Tailscale, AdGuard Home, Unbound
+- Media: Frigate, Immich, Plex
+- Security and recovery: Infisical, Trivy, Borg, Restic
+- Automation: AI-assisted operational experiments
 
-### Observability
-
-<table><tr><td align="center" width="150"><img src="assets/icons/grafana.svg" width="52" height="52" alt="Grafana logo"><br><strong>Grafana</strong></td><td align="center" width="150"><img src="assets/icons/prometheus.svg" width="52" height="52" alt="Prometheus logo"><br><strong>Prometheus</strong></td><td align="center" width="150"><img src="assets/icons/checkmk.svg" width="52" height="52" alt="Checkmk logo"><br><strong>Checkmk</strong></td><td align="center" width="150"><img src="assets/icons/uptime-kuma.svg" width="52" height="52" alt="Uptime Kuma logo"><br><strong>Uptime Kuma</strong></td></tr></table>
-
-### Networking & DNS
-
-<table><tr><td align="center" width="150"><img src="assets/icons/tailscale.svg" width="52" height="52" alt="Tailscale logo"><br><strong>Tailscale</strong></td><td align="center" width="150"><img src="assets/icons/adguard-home.svg" width="52" height="52" alt="AdGuard Home logo"><br><strong>AdGuard Home</strong></td><td align="center" width="150"><img src="assets/icons/unbound.svg" width="52" height="52" alt="Unbound logo"><br><strong>Unbound</strong></td></tr></table>
-
-### Media & GPU applications
-
-<table><tr><td align="center" width="150"><img src="assets/icons/frigate.svg" width="52" height="52" alt="Frigate logo"><br><strong>Frigate</strong></td><td align="center" width="150"><img src="assets/icons/immich.svg" width="52" height="52" alt="Immich logo"><br><strong>Immich</strong></td><td align="center" width="150"><img src="assets/icons/plex.svg" width="52" height="52" alt="Plex logo"><br><strong>Plex</strong></td></tr></table>
-
-### Secrets, security & recovery
-
-<table><tr><td align="center" width="150"><img src="assets/icons/infisical.svg" width="52" height="52" alt="Infisical logo"><br><strong>Infisical</strong></td><td align="center" width="150"><img src="assets/icons/trivy.svg" width="52" height="52" alt="Trivy logo"><br><strong>Trivy</strong></td><td align="center" width="150"><img src="assets/icons/borg.svg" width="52" height="52" alt="Borg logo"><br><strong>Borg</strong></td><td align="center" width="150"><strong>Restic</strong></td></tr></table>
+</details>
 
 [Logo sources and attribution](assets/README.md)
 
@@ -59,22 +50,11 @@ A selected view of the tools and applications I use, grouped by responsibility r
 
 *Logical architecture, not a physical network map.*
 
-| Area | Tools and responsibilities |
-| --- | --- |
-| Version control | Forgejo, Git, pull requests |
-| Deployment | CI/CD, central policy, Docker Compose, Dockhand |
-| Secrets | Infisical, separation of configuration and credentials |
-| Observability | Prometheus, Grafana, Checkmk |
-| Recovery | Restic, Borg, selective offsite backups |
-
 ## 02 · How a change reaches the hosts
 
 ![Illustrative animated deployment flow](assets/deployment-flow.svg)
 
 *Conceptual animation, not live status. The detailed decision flow is in the deployment documentation.*
-
-
-
 
 The manifest determines which changed stacks are eligible for deployment. Dependencies define ordering, not application health. A deployed revision confirms the configuration version, not the health of every service.
 
@@ -82,27 +62,9 @@ The manifest determines which changed stacks are eligible for deployment. Depend
 
 ## 03 · Designing for recovery
 
-```mermaid
-flowchart LR
-    A["Workload data"] --> B["Backup preparation"]
-    C["Database-native dumps"] --> B
-    B --> D["Local backup tier"]
-    D --> E["Selective offsite tier"]
-    D -.-> F["Restore verification"]
-    E -.-> F
-    F --> G["Recovery confidence"]
-    class A,C source;
-    class B control;
-    class D,E recovery;
-    class F,G runtime;
-    classDef source fill:#DBEAFE,stroke:#2563EB,color:#172554,stroke-width:1.5px;
-    classDef control fill:#EDE9FE,stroke:#7C3AED,color:#2E1065,stroke-width:1.5px;
-    classDef runtime fill:#CCFBF1,stroke:#0D9488,color:#134E4A,stroke-width:1.5px;
-    classDef recovery fill:#FEF3C7,stroke:#D97706,color:#78350F,stroke-width:1.5px;
-    classDef caution fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D,stroke-width:1.5px;
-```
+![Recovery model](assets/recovery-map.svg)
 
-*The dashed paths represent verification activities, not a claim that every restore has been tested.*
+*Restore verification is a separate activity, not a claim that every restore has been tested.*
 
 I treat a successful backup and a proven restore as different things. Offsite coverage is selective, and recovery confidence depends on verification.
 
