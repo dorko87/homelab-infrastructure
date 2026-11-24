@@ -77,16 +77,30 @@ def validate_svg(raw, label, depth=0):
         if ref not in ids:
             fail(label, f"unresolved SVG reference #{ref}")
 
+def markdown_anchors(path):
+    """Approximate GitHub heading slugs, including duplicate suffixes."""
+    text = re.sub(r"```[\s\S]*?```", "", path.read_text(encoding="utf-8"))
+    anchors = set(re.findall(r'<(?:a|[a-z]+)\s+[^>]*(?:id|name)="([^"]+)"', text))
+    seen = {}
+    for heading in re.findall(r"^#{1,6}\s+(.+?)\s*#*\s*$", text, re.M):
+        slug = re.sub(r"[^\w\- ]", "", heading.lower()).replace(" ", "-")
+        n = seen.get(slug, 0)
+        seen[slug] = n + 1
+        anchors.add(slug if not n else f"{slug}-{n}")
+    return anchors
+
 def validate_link(file, target):
     target = target.strip().strip("<>")
-    if not target or target.startswith("#"):
+    if not target:
         return
     parsed = urlsplit(target)
     if parsed.scheme or parsed.netloc:
         return
-    path = (file.parent / unquote(parsed.path)).resolve()
+    path = (file.parent / unquote(parsed.path)).resolve() if parsed.path else file.resolve()
     if not path.is_relative_to(ROOT) or not path.exists():
         fail(file.relative_to(ROOT), f"broken local link: {target}")
+    elif parsed.fragment and path.suffix.lower() == ".md" and unquote(parsed.fragment) not in markdown_anchors(path):
+        fail(file.relative_to(ROOT), f"broken Markdown anchor: {target}")
 
 def validate_catalog():
     catalog = json.loads((ROOT / "assets/services.json").read_text(encoding="utf-8"))
