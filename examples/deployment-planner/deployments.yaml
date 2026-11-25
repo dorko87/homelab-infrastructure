@@ -1,0 +1,15 @@
+{
+  "stacks": {
+    "platform": {
+      "after": []
+    },
+    "application": {
+      "after": [
+        "platform"
+      ]
+    }
+  },
+  "excluded": {
+    "manual": "Operator-managed example"
+  }
+}
