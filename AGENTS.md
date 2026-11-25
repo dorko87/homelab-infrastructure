@@ -19,6 +19,11 @@ This repository is a public engineering portfolio based on an independent homela
 - Retain accurate technical terms and disclose AI-assisted work where relevant. Do not describe an AI-assisted example as independently authored by the owner.
 - Review README files, case studies, diagram labels and new documentation for these rules before release.
 
+## AI operations descriptions
+- Describe specialized agents as able to work independently, make technical decisions, investigate, implement, review and validate within their responsibilities.
+- Describe the human operator as setting overall direction and making critical decisions. Do not imply routine decisions require human approval.
+- Keep descriptions at the logical level. Do not publish actual access mappings or specific sensitive approval rules.
+
 ## Privacy and public release
 - Treat every tracked file, commit, branch, issue, PR and generated artifact as public.
 - Never copy private repositories, live configuration, logs, screenshots, exports, or existing private diagrams into this repository.
