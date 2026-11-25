@@ -48,6 +48,19 @@ class SvgTests(unittest.TestCase):
         v.validate_svg(b'<!DOCTYPE svg><svg/>', 'fixture')
         self.assertIn('DTD or entity declaration', '\n'.join(v.errors))
 
+    def test_anchor(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            page = root / 'README.md'
+            page.write_text('# Hello world\n## Repeated\n## Repeated\n')
+            with patch.object(v, 'ROOT', root):
+                v.errors.clear()
+                v.validate_link(page, '#hello-world')
+                v.validate_link(page, 'README.md#repeated-1')
+                self.assertEqual(v.errors, [])
+                v.validate_link(page, '#missing')
+                self.assertIn('broken Markdown anchor', '\n'.join(v.errors))
+
     def test_local_link(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

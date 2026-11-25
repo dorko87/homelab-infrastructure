@@ -93,4 +93,4 @@ I'm working toward stronger recovery confidence and easier-to-verify infrastruct
 
 > This is a public engineering portfolio, not a mirror of my private homelab. Network details, private identifiers, credentials, live configurations and operational paths are deliberately omitted. Examples are synthetic.
 
-[Back to my GitHub profile](https://github.com/dorko87)
+[Portfolio changelog](CHANGELOG.md) · [Release checklist](RELEASING.md) · [Back to my GitHub profile](https://github.com/dorko87)
