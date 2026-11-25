@@ -9,6 +9,16 @@ This repository is a public engineering portfolio based on an independent homela
 - Explain the problem, approach, trade-offs, validation, outcome and remaining limitations. Never invent achievements, measurements, tests or implementation status.
 - Keep the README approachable; put detailed technical explanations in topic-specific documents. Use accessible Markdown and Mermaid diagrams where useful.
 
+## Writing style
+- Use plain, natural English. Write like an engineer explaining their own work to another engineer.
+- Avoid em dashes and en dashes in original prose. Use a period, comma, colon or ordinary hyphen as appropriate. Preserve third-party license texts, quoted material, URLs and code syntax.
+- Prefer concrete verbs and specific technical details to marketing language. Avoid phrases such as "seamlessly", "robust solution", "leverage", "cutting-edge", and generic claims of excellence.
+- Use first person for the owner's verified experience. Use neutral wording for reference material and synthetic examples.
+- Do not invent personal experiences, motivations, outcomes, measurements or evidence to make writing sound more personal.
+- Keep sentences and paragraphs short where useful. Avoid repetitive introductions, slogan-like headings and unnecessary summaries.
+- Retain accurate technical terms and disclose AI-assisted work where relevant. Do not describe an AI-assisted example as independently authored by the owner.
+- Review README files, case studies, diagram labels and new documentation for these rules before release.
+
 ## Privacy and public release
 - Treat every tracked file, commit, branch, issue, PR and generated artifact as public.
 - Never copy private repositories, live configuration, logs, screenshots, exports, or existing private diagrams into this repository.
