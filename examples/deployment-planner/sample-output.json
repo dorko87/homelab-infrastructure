@@ -1,0 +1,13 @@
+{
+  "deploy": [
+    "platform",
+    "application"
+  ],
+  "excluded": [
+    "manual"
+  ],
+  "ignored": [
+    "README.md"
+  ],
+  "mode": "dry-run"
+}
