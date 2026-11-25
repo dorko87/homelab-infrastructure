@@ -63,3 +63,19 @@ jobs:
           persist-credentials: false
       - name: Scan public Git history
         run: docker run --rm -v "$PWD:/repo:ro" ghcr.io/gitleaks/gitleaks:v8.24.3 git /repo --redact=100 --no-banner --log-opts=--all
+
+  validate-planner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Test synthetic planner and reproduce sample
+        working-directory: examples/deployment-planner
+        run: |
+          python3 -m unittest -v
+          python3 planner.py --manifest deployments.yaml --root fixtures stacks/application/compose.yaml stacks/platform/compose.yaml stacks/manual/compose.yaml README.md > /tmp/planner-output.json
+          diff -u sample-output.json /tmp/planner-output.json
+          docker compose -f fixtures/stacks/platform/compose.yaml config --quiet
+          docker compose -f fixtures/stacks/application/compose.yaml config --quiet
