@@ -1,20 +1,26 @@
-# Changing the deployment engine
+# Moving from Komodo to Dockhand
 
-## The problem
+I wanted to change deployment tools without rewriting the whole deployment workflow. The main problem was deciding what should deploy independently of the tool that actually deploys it.
 
-I wanted a more maintainable deployment workflow without coupling the entire repository to a single orchestration tool.
+## What changed
 
-## The approach
+I separated the deployment policy from the executor. Git holds the stack definitions, and a central manifest says which stacks can deploy and in what order. The planner identifies changed stacks before Compose validation and Dockhand preflight.
 
-The migration from Komodo to Dockhand separates policy from execution. Git defines the desired configuration, a manifest determines what can deploy, and the planner identifies changed stacks before validation and preflight. Dockhand handles deployment and the workflow checks the deployed revision.
+This means the executor does not need to decide which changes belong in a deployment. Documentation changes and excluded stacks are skipped. Dependencies set the order when both stacks are selected, rather than acting as application health checks.
 
-## Current state
+## How changes are checked
 
-The source snapshot documents Dockhand as the active executor. Komodo is retained but inactive; its former executor and runtime switch were removed from the pipeline. Returning to the former mechanism would require a deliberate change, not an automatic switch.
+The workflow checks the deployed revision against the merge revision. A missing Compose definition stops the selected deployment rather than allowing it to proceed with incomplete configuration. Independent stack failures are reported without stopping every unrelated attempt.
 
-## Remaining gap
+These checks establish which configuration was deployed. They do not prove that every application is healthy.
 
-The runbook explicitly records that the fallback drill was not performed. I therefore treat fallback as unproven. The key lesson is that retaining a tool is not equivalent to testing recovery. Canary validation is useful for changes to the active deployment engine, but does not establish fallback readiness.
+## Where things stand
+
+Dockhand is the active executor in the documented snapshot. Komodo is still retained, but its former executor and runtime switch were removed. Returning to it would require a deliberate change.
+
+The fallback drill was not performed. I do not count keeping the former tool available as a tested recovery method.
+
+See the [deployment workflow](../ci-cd/deployment-workflow.md) and the [standalone planner example](../examples/deployment-planner/README.md).
 
 ## Visual overview
 
