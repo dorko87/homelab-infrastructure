@@ -1,8 +1,8 @@
-<p align="center"><img src="assets/hero.svg" alt="Homelab infrastructure — Build, Deploy, Observe, Recover" width="100%"></p>
+<p align="center"><img src="assets/hero.svg" alt="Homelab infrastructure: build, deploy, monitor and recover" width="100%"></p>
 
 # My Homelab Infrastructure
 
-<p align="center"><strong>From a Git commit to a running service — and everything in between.</strong></p>
+<p align="center"><strong>How I manage and deploy services across my homelab.</strong></p>
 
 <p align="center">
   <img alt="Defined hosts: 5" src="https://img.shields.io/badge/Defined%20hosts-5-2563EB?style=for-the-badge">
@@ -34,7 +34,7 @@ The numbers above describe the private configuration snapshot dated November 24,
 
 [Compact mobile layout](assets/service-ecosystem-mobile.svg) · [Full-size ecosystem](assets/service-ecosystem.svg)
 
-A selected view of the tools and applications I use, grouped by responsibility rather than physical location. I also explore AI-assisted operational workflows as independent experiments. This is not a complete or live service inventory.
+A selected view of the tools and applications I use, grouped by responsibility rather than physical location. I also use specialized AI agents to investigate issues, make technical decisions, implement changes and review work. I set the overall direction and make critical decisions. This is not a complete or live service inventory.
 
 <details><summary>Accessible text version of the ecosystem</summary>
 
@@ -49,7 +49,7 @@ A selected view of the tools and applications I use, grouped by responsibility r
 
 [Logo sources and attribution](assets/README.md)
 
-## 01 · How everything fits together
+## How everything fits together
 
 [![Platform layers](assets/platform-layers.svg)](assets/platform-layers.svg)
 
@@ -57,7 +57,7 @@ A selected view of the tools and applications I use, grouped by responsibility r
 
 *Logical architecture, not a physical network map.*
 
-## 02 · How a change reaches the hosts
+## How a change reaches the hosts
 
 [![Illustrative animated deployment flow](assets/deployment-flow.svg)](assets/deployment-flow.svg)
 
@@ -67,7 +67,7 @@ The manifest determines which changed stacks are eligible for deployment. Docume
 
 [Explore the deployment workflow →](ci-cd/deployment-workflow.md) · [See the 11 quality gates →](ci-cd/quality-gates.md)
 
-## 03 · Designing for recovery
+## Designing for recovery
 
 [![Recovery model](assets/recovery-map.svg)](assets/recovery-map.svg)
 
@@ -77,19 +77,24 @@ I treat a successful backup and a proven restore as different things. Offsite co
 
 [Read about disaster recovery →](reliability/disaster-recovery.md)
 
-## 04 · Engineering decisions worth documenting
+## Engineering case studies
 
-| Topic | Why it matters |
+| Case study | What it covers |
 | --- | --- |
-| [Architecture and host roles](architecture/overview.md) | Understanding where responsibilities belong |
-| [Changing the deployment engine](case-studies/deployment-migration.md) | Separating policy from execution and recognizing an untested fallback |
-| [Observability](reliability/observability.md) | Detecting failures, including missing scheduled activity |
-| [Secrets management](security/secrets-management.md) | Keeping credentials out of versioned configuration |
-| [Synthetic examples](examples/README.md) | Exploring Compose and deployment policy without exposing live configuration |
+| [Moving from Komodo to Dockhand](case-studies/deployment-migration.md) | Deployment policy, validation and fallback |
+| [Detecting silent failures](case-studies/detecting-silent-failures.md) | Checking for missing scheduled activity |
+| [Planning backup and recovery](case-studies/disaster-recovery.md) | Backup coverage and restore checks |
+| [Working with specialized AI agents](case-studies/ai-assisted-operations.md) | Independent decisions, implementation and review |
+
+## Try the deployment planner
+
+The [Python example](examples/deployment-planner/README.md) shows how changed stacks are selected and ordered. It includes test fixtures, failure cases and reproducible JSON output. It is a synthetic, AI-assisted example, not the private deployment code. It does not deploy anything.
+
+[AI agent operating model](automation/ai-assisted-operations.md) · [Observability](reliability/observability.md) · [Secrets management](security/secrets-management.md)
 
 ## What's next?
 
-I'm working toward stronger recovery confidence and easier-to-verify infrastructure changes. One known gap is the untested return path to the former deployment engine. Keeping an older tool available is not the same as proving recovery.
+I want to make recovery and infrastructure changes easier to verify. One known gap is the untested return path to the former deployment engine. Keeping an older tool available is not the same as proving recovery.
 
 > This is a public engineering portfolio, not a mirror of my private homelab. Network details, private identifiers, credentials, live configurations and operational paths are deliberately omitted. Examples are synthetic.
 
