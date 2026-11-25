@@ -1,5 +1,11 @@
 # Changelog
 
+## V5.0 (in development)
+
+- Expand engineering case studies and describe the AI agent operating model.
+- Add a standalone synthetic Python deployment planner with tests and sample output.
+- Use plain English across portfolio documentation.
+
 ## V4.4
 
 - Refine recovery paths, logo proportions, mobile typography and the AI experiments card.
