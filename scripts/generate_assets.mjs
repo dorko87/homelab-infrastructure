@@ -14,7 +14,7 @@ function render(catalog,readIcon,mobile) {
       const cx=x+(cardW/services.length)*(j+.5);
       const bg=label==="Uptime Kuma"?"#24374a":"#f1f5f9";
       const size=label==="Docker"?54:48;
-      const tx=`<text x="${cx}" y="${y+146}" text-anchor="middle" font-size="${mobile?18:14}" fill="#e2e8f0">${esc(label)}</text>`;
+      const tx=`<text x="${cx}" y="${y+146}" text-anchor="middle" font-size="${mobile?(label.length>10?15:17):14}" fill="#e2e8f0">${esc(label)}</text>`;
       let icon;
       if(file){if(!/^[a-z0-9-]+\.svg$/.test(file))throw Error("Invalid icon filename");
         const raw=readIcon(file);if(!raw.includes("<svg")||/<script\b|<foreignObject\b|<!DOCTYPE/i.test(raw))throw Error("Invalid icon: "+file);icon=`<image data-service="${esc(label)}" data-tile-bg="${bg}" href="data:image/svg+xml;base64,${base64(raw)}" x="${cx-size/2}" y="${y+89-size/2}" width="${size}" height="${size}" preserveAspectRatio="xMidYMid meet"/>`;
