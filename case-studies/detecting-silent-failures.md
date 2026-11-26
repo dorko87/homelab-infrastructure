@@ -18,6 +18,20 @@ Suppose a dependency update job has not reported activity within its expected in
 
 An independent freshness check helps detect this situation even if the job is unable to send its own alert.
 
+```mermaid
+flowchart TD
+    A["Expected activity is missing"] --> B{"Is there a recent run?"}
+    B -->|No| C["Check scheduler and runner"]
+    B -->|Yes| D{"Did the run succeed?"}
+    D -->|No| E["Inspect job errors and dependencies"]
+    D -->|Yes| F["Check result reporting"]
+    C --> G["Verify next expected activity"]
+    E --> G
+    F --> G
+```
+
+The decision tree is an investigation guide, not a record of an incident. I would check the run history and the reporting signal separately. A successful run without a report points to a different problem than a job that never started. A fresh signal alone does not prove that the job produced the intended result.
+
 The public documentation does not establish measured detection times or a complete history of incidents.
 
 See [observability](../reliability/observability.md).
