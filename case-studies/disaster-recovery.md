@@ -12,6 +12,16 @@ A backup on the same disk does not help if that disk fails. For databases, simpl
 
 A useful restore exercise would check that the expected backup exists, that the data can be read, that the application can start with the restored data, and that its key functions work.
 
+| Check | Evidence to look for |
+| --- | --- |
+| Backup availability | Expected recovery point can be located |
+| Data integrity | Backup can be read and restored without errors |
+| Database recovery | Database opens and expected records can be queried |
+| Application recovery | Service starts with restored data |
+| Functional verification | Representative application operations work |
+
+A restore exercise should use an isolated test environment where practical. If any check fails, investigate before counting the restore as successful. Backup freshness and recovery time should be recorded separately.
+
 These are verification steps, not a claim that every restore has already been tested. The current documentation does not establish universal restore coverage or measured recovery times.
 
 See [backup and disaster recovery](../reliability/disaster-recovery.md) for the design.
