@@ -1,6 +1,6 @@
 # Architecture overview
 
-The environment is organized around five defined host roles, with container workloads distributed according to their resource and recovery needs. Git is the source of truth for stack definitions. Forgejo runs validation and deployment workflows; Dockhand is the active deployment engine. Infisical provides centralized secrets management. Monitoring and backup systems are separate operational concerns rather than implicit properties of the deployment pipeline.
+I organize the homelab around five host roles. Workloads are placed according to their resource and recovery needs. Git holds the stack definitions, Forgejo runs the CI workflows, and Dockhand deploys the selected stacks. I use Infisical for secrets. Monitoring and backups run separately from the deployment workflow.
 
 ```mermaid
 flowchart TD
