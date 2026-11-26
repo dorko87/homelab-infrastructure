@@ -8,6 +8,16 @@ I separated the deployment policy from the executor. Git holds the stack definit
 
 This means the executor does not need to decide which changes belong in a deployment. Documentation changes and excluded stacks are skipped. Dependencies set the order when both stacks are selected, rather than acting as application health checks.
 
+## Before and after
+
+| Area | Earlier approach | Current approach |
+| --- | --- | --- |
+| Deployment engine | Komodo | Dockhand |
+| Policy and execution | Migration started from the existing Komodo workflow | Central policy and planning are separate from Dockhand |
+| Return to former engine | Former execution path existed | Requires a deliberate change; no automatic switch |
+
+The main trade-off is that separating the planner from the executor makes the execution tool easier to replace, but the interface between them still needs validation. Keeping Komodo available does not remove that requirement.
+
 ## How changes are checked
 
 The workflow checks the deployed revision against the merge revision. A missing Compose definition stops the selected deployment rather than allowing it to proceed with incomplete configuration. Independent stack failures are reported without stopping every unrelated attempt.
