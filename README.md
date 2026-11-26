@@ -34,7 +34,7 @@ The numbers above describe the private configuration snapshot dated November 24,
 
 [Compact mobile layout](assets/service-ecosystem-mobile.svg) · [Full-size ecosystem](assets/service-ecosystem.svg)
 
-A selected view of the tools and applications I use, grouped by responsibility rather than physical location. I also use specialized AI agents to investigate issues, make technical decisions, implement changes and review work. I set the overall direction and make critical decisions. This is not a complete or live service inventory.
+These are some of the tools I use, grouped by what they do. I also use specialized AI agents to investigate issues, make technical decisions, implement changes and review work. I set the overall direction and make critical decisions. This is not a complete or live service inventory.
 
 <details><summary>Accessible text version of the ecosystem</summary>
 
@@ -43,7 +43,7 @@ A selected view of the tools and applications I use, grouped by responsibility r
 - Networking: Tailscale, AdGuard Home, Unbound
 - Media: Frigate, Immich, Plex
 - Security and recovery: Infisical, Trivy, Borg, Restic
-- Automation: AI-assisted operational experiments
+- Automation: Specialized AI agents
 
 </details>
 
@@ -63,9 +63,9 @@ A selected view of the tools and applications I use, grouped by responsibility r
 
 *Conceptual animation, not live status. One 4.8-second cycle; reduced-motion preferences disable the animation. The detailed decision flow is in the deployment documentation.*
 
-The manifest determines which changed stacks are eligible for deployment. Documentation-only changes and excluded stacks do not deploy. Independent stack failures are reported without treating revision verification as an application health check. Dependencies define ordering, not application health. A deployed revision confirms the configuration version, not the health of every service.
+The manifest determines which changed stacks are eligible for deployment. Documentation-only changes and excluded stacks do not deploy. If an independent stack fails, other unrelated stacks can still deploy. The workflow reports the failure. Dependencies set the deployment order, and revision checks confirm which configuration was deployed. Neither proves application health.
 
-[Explore the deployment workflow →](ci-cd/deployment-workflow.md) · [See the 11 quality gates →](ci-cd/quality-gates.md)
+[Deployment workflow](ci-cd/deployment-workflow.md) · [11 CI checks](ci-cd/quality-gates.md)
 
 ## Designing for recovery
 
@@ -75,7 +75,7 @@ The manifest determines which changed stacks are eligible for deployment. Docume
 
 I treat a successful backup and a proven restore as different things. Offsite coverage is selective, and recovery confidence depends on verification.
 
-[Read about disaster recovery →](reliability/disaster-recovery.md)
+[Backup and recovery](reliability/disaster-recovery.md)
 
 ## Engineering case studies
 
