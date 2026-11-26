@@ -1,10 +1,11 @@
 # Changelog
 
-## V5.0 (in development)
+## V5.0
 
 - Expand engineering case studies and describe the AI agent operating model.
 - Add a standalone synthetic Python deployment planner with tests and sample output.
-- Use plain English across portfolio documentation.
+- Use plain English across portfolio documentation and check long dashes in CI.
+- Include rendered Mermaid diagrams in the visual review artifacts.
 
 ## V4.4
 

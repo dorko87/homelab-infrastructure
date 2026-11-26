@@ -54,6 +54,13 @@ jobs:
           PUPPETEER_SKIP_DOWNLOAD: "true"
         run: |
           python3 scripts/check_mermaid.py
+      - name: Upload Mermaid review images
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: portfolio-mermaid-review
+          path: qa-mermaid/*.png
+          if-no-files-found: error
+          retention-days: 14
 
   secret-scan:
     runs-on: ubuntu-latest

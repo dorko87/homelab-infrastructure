@@ -10,7 +10,7 @@ function render(catalog,readIcon,mobile) {
   const cards=catalog.groups.map(({name,color,purpose,services},i)=>{
     if(!services.length||services.length>4||!/^#[0-9a-fA-F]{6}$/.test(color))throw Error("Invalid catalog group");
     const x=mobile?20:i%2===0?24:512,y=top+Math.floor(i/(mobile?1:2))*row;
-    const inner=name==="AI-assisted operations" && services.length===1 && services[0][0]==="AI agents" ? `<g><rect x="${x+20}" y="${y+59}" width="62" height="62" rx="12" fill="#292547"/><g stroke="#c4b5fd" stroke-width="2.5" fill="none"><rect x="${x+31}" y="${y+77}" width="40" height="29" rx="7"/><path d="M${x+51} ${y+77}v-8"/><circle cx="${x+41}" cy="${y+91}" r="3"/><circle cx="${x+61}" cy="${y+91}" r="3"/></g><text x="${x+96}" y="${y+84}" font-size="18" font-weight="600" fill="#f8fafc">AI agents</text><text x="${x+96}" y="${y+107}" font-size="15" fill="#cbd5e1">Independent operational experiments</text></g>` : services.map(([label,file],j)=>{
+    const inner=name==="AI-assisted operations" && services.length===1 && services[0][0]==="AI agents" ? `<g><rect x="${x+20}" y="${y+59}" width="62" height="62" rx="12" fill="#292547"/><g stroke="#c4b5fd" stroke-width="2.5" fill="none"><rect x="${x+31}" y="${y+77}" width="40" height="29" rx="7"/><path d="M${x+51} ${y+77}v-8"/><circle cx="${x+41}" cy="${y+91}" r="3"/><circle cx="${x+61}" cy="${y+91}" r="3"/></g><text x="${x+96}" y="${y+84}" font-size="18" font-weight="600" fill="#f8fafc">AI agents</text><text x="${x+96}" y="${y+107}" font-size="15" fill="#cbd5e1">Specialized agents working together</text></g>` : services.map(([label,file],j)=>{
       const cx=x+(cardW/services.length)*(j+.5);
       const bg=label==="Uptime Kuma"?"#24374a":"#f1f5f9";
       const size=label==="Docker"?54:48;

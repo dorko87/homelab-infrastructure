@@ -110,7 +110,7 @@
     {
       "name": "AI-assisted operations",
       "color": "#c4b5fd",
-      "purpose": "Bounded experiments in infrastructure automation",
+      "purpose": "Independent decisions, implementation and review",
       "services": [
         [
           "AI agents",
