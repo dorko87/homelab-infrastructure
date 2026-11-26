@@ -9,7 +9,7 @@ class PolicyError(ValueError):
     pass
 
 def relative(value):
-    if not isinstance(value, str) or not value or "\\" in value:
+    if not isinstance(value, str) or not value or "\\" in value or any(ord(ch) < 32 or ord(ch) == 127 for ch in value):
         raise PolicyError("Expected a relative POSIX path")
     p = PurePosixPath(value)
     if p.is_absolute() or any(x in ("", ".", "..") for x in value.split("/")) or ":" in value:
@@ -66,13 +66,24 @@ def plan(policy, changed, root):
             skipped.add(name)
         else:
             selected.add(name)
-    root = Path(root).resolve()
+    try:
+        root = Path(root).resolve(strict=True)
+    except (OSError, RuntimeError) as exc:
+        raise PolicyError("Invalid fixture root") from exc
+    if not root.is_dir():
+        raise PolicyError("Fixture root must be a directory")
     for name in sorted(selected):
-        compose = (root / "stacks" / name / "compose.yaml").resolve()
+        try:
+            compose = (root / "stacks" / name / "compose.yaml").resolve(strict=True)
+        except (OSError, RuntimeError) as exc:
+            raise PolicyError(f"Missing or unsafe Compose definition: {name}") from exc
         if not compose.is_relative_to(root) or not compose.is_file():
             raise PolicyError(f"Missing or unsafe Compose definition: {name}")
     return {"mode": "dry-run", "deploy": order(selected, deps),
             "excluded": sorted(skipped), "ignored": sorted(ignored)}
+
+def reject_constant(value):
+    raise PolicyError(f"Invalid JSON constant: {value}")
 
 def unique_pairs(pairs):
     result = {}
@@ -89,7 +100,7 @@ def main():
     parser.add_argument("changed", nargs="*")
     args = parser.parse_args()
     try:
-        policy = json.loads(args.manifest.read_text(encoding="utf-8"), object_pairs_hook=unique_pairs)
+        policy = json.loads(args.manifest.read_text(encoding="utf-8"), object_pairs_hook=unique_pairs, parse_constant=reject_constant)
         result = plan(policy, args.changed, args.root)
     except (OSError, ValueError) as exc:
         print(json.dumps({"error": str(exc), "mode": "dry-run"}, sort_keys=True), file=sys.stderr)
