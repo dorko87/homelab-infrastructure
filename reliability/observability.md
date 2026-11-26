@@ -1,10 +1,10 @@
 # Observability
 
-The homelab uses monitoring components including Prometheus, Grafana and Checkmk. I use monitoring to understand infrastructure and service behavior rather than assuming a successful deployment means everything is healthy.
+I use Prometheus, Grafana and Checkmk to monitor infrastructure and services. A successful deployment does not tell me whether the application is healthy.
 
-An operational lesson documented in the repository is that a scheduled task cannot reliably detect its own absence. Monitoring for silence requires an independent check of whether expected activity occurred. This matters for dependency updates, backups and other recurring operations.
+A scheduled task cannot report an error if it never starts. A separate check needs to look for missing activity. This matters for dependency updates, backups and other recurring operations.
 
-The public portfolio does not reproduce live dashboards, alert destinations, monitoring targets or operational thresholds.
+See [detecting silent failures](../case-studies/detecting-silent-failures.md) for an example investigation. Live dashboards and monitoring details are not included here.
 
 ## Visual overview
 
