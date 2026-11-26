@@ -25,6 +25,8 @@ jobs:
         run: node scripts/generate_assets.mjs --check
       - name: Validate SVG assets and local links
         run: python3 scripts/validate_assets.py
+      - name: Check original prose
+        run: python3 scripts/check_writing.py
       - name: Test validator against deliberate defects
         run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
       - name: Validate synthetic Compose and manifest
