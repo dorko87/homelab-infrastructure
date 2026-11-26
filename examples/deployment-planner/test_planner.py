@@ -5,7 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
-from planner import plan, PolicyError, unique_pairs
+from planner import plan, PolicyError, unique_pairs, reject_constant
 
 HERE = Path(__file__).resolve().parent
 POLICY = json.loads((HERE / "deployments.yaml").read_text())
@@ -75,6 +75,47 @@ class PlannerTests(unittest.TestCase):
             (target / "compose.yaml").symlink_to(outside)
             with self.assertRaises(PolicyError):
                 plan(POLICY, ["stacks/platform/compose.yaml"], root)
+
+    def test_duplicate_changes(self):
+        path = "stacks/platform/compose.yaml"
+        self.assertEqual(plan(POLICY, [path, path], ROOT), plan(POLICY, [path], ROOT))
+
+    def test_duplicate_dependencies(self):
+        policy = copy.deepcopy(POLICY)
+        policy["stacks"]["application"]["after"] = ["platform", "platform"]
+        with self.assertRaises(PolicyError):
+            plan(policy, [], ROOT)
+
+    def test_invalid_policy_shapes(self):
+        for policy in (None, [], {}, {"stacks": [], "excluded": {}},
+                       {"stacks": {"x": {"after": [1]}}, "excluded": {}},
+                       {"stacks": {}, "excluded": {"x": ""}}):
+            with self.subTest(policy=policy), self.assertRaises(PolicyError):
+                plan(policy, [], ROOT)
+
+    def test_control_characters(self):
+        for path in ("stacks/platform/a\x00", "docs/a\n.md", "docs/a\x7f"):
+            with self.subTest(path=path), self.assertRaises(PolicyError):
+                plan(POLICY, [path], ROOT)
+
+    def test_invalid_root(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for root in (Path(tmp) / "missing", HERE / "planner.py"):
+                with self.assertRaises(PolicyError):
+                    plan(POLICY, [], root)
+
+    def test_symlink_loop(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "stacks/platform"
+            target.mkdir(parents=True)
+            (target / "compose.yaml").symlink_to("compose.yaml")
+            with self.assertRaises(PolicyError):
+                plan(POLICY, ["stacks/platform/compose.yaml"], tmp)
+
+    def test_nonstandard_json(self):
+        for value in ("NaN", "Infinity", "-Infinity"):
+            with self.assertRaises(PolicyError):
+                json.loads(value, parse_constant=reject_constant)
 
     def test_cli_error(self):
         result = subprocess.run([sys.executable, str(HERE / "planner.py"), "--manifest",
