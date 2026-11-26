@@ -4,7 +4,7 @@ A successful backup job tells me that a copy was created. It does not tell me th
 
 ## Backup design
 
-The homelab backup inventory distinguishes covered, deferred and externally managed targets. Local and offsite copies serve different purposes. Offsite coverage is selective.
+The homelab backup inventory distinguishes covered, deferred and externally managed targets. 3-2-1 Local and offsite copies serve different purposes. Offsite coverage is selective.
 
 A backup on the same disk does not help if that disk fails. For databases, simply copying a live volume can also produce a copy that cannot be restored consistently. The documented approach includes database-native dumps alongside other backup data.
 
