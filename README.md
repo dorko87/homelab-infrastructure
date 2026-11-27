@@ -5,9 +5,9 @@
 <p align="center"><strong>How I manage and deploy services across my homelab.</strong></p>
 
 <p align="center">
-  <img alt="Defined hosts: 5" src="https://img.shields.io/badge/Defined%20hosts-5-2563EB?style=for-the-badge">
-  <img alt="Defined stacks: 40" src="https://img.shields.io/badge/Defined%20stacks-40-0D9488?style=for-the-badge">
-  <img alt="CI validation jobs: 11" src="https://img.shields.io/badge/CI%20jobs-11-7C3AED?style=for-the-badge">
+  <img alt="Defined hosts: 5" src="assets/badges/hosts.svg">
+  <img alt="Defined stacks: 40" src="assets/badges/stacks.svg">
+  <img alt="CI validation jobs: 11" src="assets/badges/ci-jobs.svg">
 </p>
 
 <p align="center">
@@ -23,7 +23,7 @@ My professional background is in Tier 3 support and production troubleshooting. 
 
 The numbers above describe the private configuration snapshot dated November 24, 2026, not a live inventory of running services. The public portfolio has its own independent validation workflow.
 
-[![Portfolio validation](https://github.com/dorko87/homelab-infrastructure/actions/workflows/portfolio-validation.yml/badge.svg?branch=main)](https://github.com/dorko87/homelab-infrastructure/actions/workflows/portfolio-validation.yml)
+[Portfolio validation: latest CI runs](https://github.com/dorko87/homelab-infrastructure/actions/workflows/portfolio-validation.yml)
 
 ## The service ecosystem
 
