@@ -32,7 +32,8 @@ def asset(name):
 desktop = asset("service-ecosystem.svg")
 mobile = asset("service-ecosystem-mobile.svg")
 assets = [desktop, mobile] + [asset(n) for n in
-    ("hero.svg", "platform-layers.svg", "deployment-flow.svg", "recovery-map.svg")]
+    ("hero.svg", "platform-layers.svg", "deployment-flow.svg", "recovery-map.svg",
+     "badges/hosts.svg", "badges/stacks.svg", "badges/ci-jobs.svg")]
 payload = json.dumps(assets)
 page = """<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -64,6 +65,13 @@ const assets = """ + payload + """;
       if (different < 30) throw Error(a.name + ': blank logo tile ' + label);
       return different;
     });
+    if (a.name.startsWith('badges/')) {
+      const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      let light = 0;
+      for (let i=0; i<pixels.length; i+=4)
+        if (pixels[i]>220 && pixels[i+1]>220 && pixels[i+2]>220 && pixels[i+3]>220) light++;
+      if (light < 30) throw Error(a.name + ': missing visible badge label');
+    }
     reports.push(a.name + ' ' + im.naturalWidth + 'x' + im.naturalHeight +
       ' rendered' + (counts.length ? '; '+counts.length+' populated tiles' : ''));
   }
@@ -171,10 +179,11 @@ with tempfile.TemporaryDirectory() as tmp:
         run(["--window-size=" + size, "--screenshot=" + str(OUT / (name + ".png"))],
             tmp / (name+"-screen"), preview.as_uri())
     for a in assets[2:]:
-        preview = tmp / (a["name"] + ".html")
+        filename = a["name"].replace("/", "-")
+        preview = tmp / (filename + ".html")
         preview.write_text('<!doctype html><meta charset="utf-8"><style>body{margin:10px;background:#0b1526}img{width:100%;max-width:1000px;display:block;margin:auto}</style><img src="' +
                            a["uri"] + '">', encoding="utf-8")
-        run(["--window-size=1280,900", "--screenshot=" + str(OUT / (a["name"].replace(".svg", ".png")))],
-            tmp / (a["name"]+"-screen"), preview.as_uri())
+        run(["--window-size=1280,900", "--screenshot=" + str(OUT / (filename.replace(".svg", ".png")))],
+            tmp / (filename+"-screen"), preview.as_uri())
 print("Browser smoke tests passed; screenshots saved to qa-renders.")
 
