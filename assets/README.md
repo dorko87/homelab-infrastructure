@@ -26,10 +26,10 @@ Original diagrams are conceptual, not live telemetry.
 
 Upstream collection license texts retrieved in November 2026 are preserved here:
 
-- [Dashboard Icons — Apache License 2.0](licenses/dashboard-icons.txt)
-- [Simple Icons — CC0 1.0](licenses/simple-icons.txt)
-- [Dockhand — upstream license terms](licenses/dockhand.txt)
-- [Devicon — upstream license](licenses/devicon.txt)
+- [Dashboard Icons: Apache License 2.0](licenses/dashboard-icons.txt)
+- [Simple Icons: CC0 1.0](licenses/simple-icons.txt)
+- [Dockhand: upstream license terms](licenses/dockhand.txt)
+- [Devicon: upstream license](licenses/devicon.txt)
 
 The collection and software licenses do not by themselves grant trademark rights for every brand. The logos are used solely to identify the tools described, not to indicate affiliation or endorsement. Individual brand policies have not all been independently reviewed.
 

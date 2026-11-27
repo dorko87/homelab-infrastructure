@@ -18,6 +18,8 @@ for doc in sorted(ROOT.rglob("*.md")):
         blocks.append((str(doc.relative_to(ROOT)), i, diagram))
 if not blocks:
     raise SystemExit("No Mermaid diagrams found")
+review_dir = ROOT / "qa-mermaid"
+review_dir.mkdir(exist_ok=True)
 with tempfile.TemporaryDirectory() as tmp:
     tmp = Path(tmp)
     config = tmp / "puppeteer.json"
@@ -25,12 +27,12 @@ with tempfile.TemporaryDirectory() as tmp:
     # One invocation per diagram gives a precise location on failure.
     for n, (path, i, diagram) in enumerate(blocks):
         source = tmp / f"diagram-{n}.mmd"
-        output = tmp / f"diagram-{n}.svg"
+        output = review_dir / f"{path.replace(chr(47), chr(95) * 2)}-{i}.png"
         source.write_text(diagram, encoding="utf-8")
         print(f"Rendering {path}, diagram {i}", flush=True)
         subprocess.run(["npx", "--yes", "--package=@mermaid-js/mermaid-cli@11.4.2",
                         "mmdc", "-i", str(source), "-o", str(output), "-p", str(config)],
                        cwd=tmp, check=True, timeout=180)
-        if not output.is_file() or not output.stat().st_size:
+        if not output.is_file() or not output.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
             raise SystemExit(f"Missing render: {path}, diagram {i}")
 print(f"PASS: {len(blocks)} Mermaid diagrams rendered.")

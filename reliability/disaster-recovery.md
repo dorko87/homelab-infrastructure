@@ -2,7 +2,7 @@
 
 The repository maintains a backup inventory organized by priority and recovery requirements. It distinguishes database backups, configuration and credential-related data, and the offsite backup tier. Restic and Borg are among the tools used.
 
-A recurring design principle is that a copy on the same storage failure domain is not an independent backup. For databases, copying live volume files is not automatically a valid application-consistent backup; the documented approach includes database-native dumps.
+A copy on the same storage failure domain is not an independent backup. For databases, copying live volume files may leave an inconsistent backup. The documented approach includes database-native dumps.
 
 The inventory explicitly distinguishes covered, deferred and externally managed targets. Offsite coverage is selective, not universal. Backup job success is not proof that restoration works. Restore drills and verification of backup freshness are important parts of recovery confidence.
 
@@ -15,7 +15,7 @@ flowchart LR
     A["Workload data"] --> B["Backup preparation"]
     C["Database-native dumps"] --> B
     B --> D["Local backup tier"]
-    D --> E["Selective offsite tier"]
+    B --> E["Selective offsite tier"]
     D -.-> F["Restore verification"]
     E -.-> F
     F --> G["Recovery confidence"]

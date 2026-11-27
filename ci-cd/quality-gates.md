@@ -16,7 +16,7 @@ The source snapshot defines eleven CI jobs covering these checks:
 | Secret hygiene | Detect inappropriate credential handling |
 | Ticket reference | Support change traceability |
 
-Branch protection and pull-request checks are documented in the private repository. Image updates are managed through Renovate, with review rules and exclusions. These are preventive controls, not a guarantee that every change is safe. Runtime checks and recovery planning remain necessary.
+Branch protection and pull-request checks are documented in the private repository. Image updates are managed through Renovate, with review rules and exclusions. These checks catch some problems before deployment. I still need to check application health and plan for recovery.
 
 ## Visual overview
 

@@ -23,6 +23,6 @@ flowchart TD
     classDef caution fill:#FEE2E2,stroke:#DC2626,color:#7F1D1D,stroke-width:1.5px;
 ```
 
-The workflow delegates planning and validation to scripts, and Dockhand performs the deployment. The manifest classifies every stack as deployable or excluded. Dependencies are ordering constraints when both stacks change; they are not health gates. A failure in one independent stack does not stop all other attempts, but the overall job reports failure. A missing Compose definition for a selected stack fails closed.
+Scripts handle planning and validation. Dockhand deploys the selected stacks. The manifest marks each stack as deployable or excluded. Dependencies determine the order when both stacks change. They do not check application health. If one independent stack fails, the workflow can continue with other stacks, but the overall job still reports failure. A missing Compose file prevents that stack from being deployed.
 
-The deployed revision is checked against the merge revision. This confirms which configuration was deployed, not whether every application is healthy. Generated documentation is published after successful deployment. The public example manifest is intentionally simplified.
+The deployed revision is checked against the merge revision. This confirms which configuration was deployed, not whether every application is healthy. Generated documentation is published after successful deployment. The [public planner example](../examples/deployment-planner/README.md) demonstrates a simplified version of these planning rules.

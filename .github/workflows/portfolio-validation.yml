@@ -25,6 +25,8 @@ jobs:
         run: node scripts/generate_assets.mjs --check
       - name: Validate SVG assets and local links
         run: python3 scripts/validate_assets.py
+      - name: Check original prose
+        run: python3 scripts/check_writing.py
       - name: Test validator against deliberate defects
         run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
       - name: Validate synthetic Compose and manifest
@@ -52,6 +54,13 @@ jobs:
           PUPPETEER_SKIP_DOWNLOAD: "true"
         run: |
           python3 scripts/check_mermaid.py
+      - name: Upload Mermaid review images
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: portfolio-mermaid-review
+          path: qa-mermaid/*.png
+          if-no-files-found: error
+          retention-days: 14
 
   secret-scan:
     runs-on: ubuntu-latest
@@ -63,3 +72,19 @@ jobs:
           persist-credentials: false
       - name: Scan public Git history
         run: docker run --rm -v "$PWD:/repo:ro" ghcr.io/gitleaks/gitleaks:v8.24.3 git /repo --redact=100 --no-banner --log-opts=--all
+
+  validate-planner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Test synthetic planner and reproduce sample
+        working-directory: examples/deployment-planner
+        run: |
+          python3 -m unittest -v
+          python3 planner.py --manifest deployments.yaml --root fixtures stacks/application/compose.yaml stacks/platform/compose.yaml stacks/manual/compose.yaml README.md > /tmp/planner-output.json
+          diff -u sample-output.json /tmp/planner-output.json
+          docker compose -f fixtures/stacks/platform/compose.yaml config --quiet
+          docker compose -f fixtures/stacks/application/compose.yaml config --quiet
